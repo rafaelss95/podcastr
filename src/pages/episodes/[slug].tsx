@@ -5,6 +5,8 @@ import {
 } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+import { PlayerContext } from "../../contexts";
 import { api } from "../../services/api";
 import { EpisodeDTO, EpisodeUi } from "../../types";
 import { formatEpisode } from "../../utils/format-episode";
@@ -15,6 +17,8 @@ type Props = Readonly<{
 }>;
 
 export default function Episode({ episode }: Props) {
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
@@ -29,7 +33,7 @@ export default function Episode({ episode }: Props) {
           src={episode.thumbnail}
           objectFit="cover"
         />
-        <button type="button">
+        <button type="button" onClick={() => play(episode)}>
           <img src="/play.svg" alt="Tocar episódio" />
         </button>
       </div>

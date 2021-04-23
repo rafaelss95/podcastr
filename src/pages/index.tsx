@@ -1,6 +1,8 @@
 import { GetStaticPropsResult } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+import { PlayerContext } from "../contexts/PlayerContext";
 import { api } from "../services/api";
 import { EpisodeDTO, EpisodeUi } from "../types";
 import { formatEpisode } from "../utils/format-episode";
@@ -12,6 +14,8 @@ type Props = Readonly<{
 }>;
 
 export default function Home({ latestEpisodes, previousEpisodes }: Props) {
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
@@ -28,14 +32,14 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
                   objectFit="cover"
                 />
                 <div className={styles.details}>
-                  <Link href={`episodes/${episode.id}`}>
+                  <Link href={`/episodes/${episode.id}`}>
                     <a>{episode.title}</a>
                   </Link>
                   <p>{episode.members}</p>
                   <span>{episode.publishedAtFormatted}</span>
                   <span>{episode.file.durationFormatted}</span>
                 </div>
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="/play-green.svg" alt="Tocar episódio" />
                 </button>
               </li>
@@ -70,7 +74,7 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
                     />
                   </td>
                   <td>
-                    <Link href={`episodes/${episode.id}`}>
+                    <Link href={`/episodes/${episode.id}`}>
                       <a>{episode.title}</a>
                     </Link>
                   </td>
@@ -78,7 +82,7 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
                   <td style={{ width: 100 }}>{episode.publishedAtFormatted}</td>
                   <td>{episode.file.durationFormatted}</td>
                   <td>
-                    <button type="button">
+                    <button type="button" onClick={() => play(episode)}>
                       <img src="/play-green.svg" alt="Tocar episódio" />
                     </button>
                   </td>
