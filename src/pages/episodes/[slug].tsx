@@ -6,8 +6,7 @@ import {
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext } from "react";
-import { PlayerContext } from "../../contexts";
+import { usePlayer } from "../../contexts";
 import { api } from "../../services/api";
 import { EpisodeDTO, EpisodeUi } from "../../types";
 import { formatEpisode } from "../../utils/format-episode";
@@ -18,7 +17,7 @@ type Props = Readonly<{
 }>;
 
 export default function Episode({ episode }: Props) {
-  const { play } = useContext(PlayerContext);
+  const { play } = usePlayer();
 
   return (
     <div className={styles.episode}>

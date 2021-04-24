@@ -2,8 +2,7 @@ import { GetStaticPropsResult } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext } from "react";
-import { PlayerContext } from "../contexts/PlayerContext";
+import { usePlayer } from "../contexts/PlayerContext";
 import { api } from "../services/api";
 import { EpisodeDTO, EpisodeUi } from "../types";
 import { formatEpisode } from "../utils/format-episode";
@@ -15,7 +14,8 @@ type Props = Readonly<{
 }>;
 
 export default function Home({ latestEpisodes, previousEpisodes }: Props) {
-  const { play } = useContext(PlayerContext);
+  const { playMultiple } = usePlayer();
+  const episodes = [...latestEpisodes, ...previousEpisodes];
 
   return (
     <div className={styles.homepage}>
@@ -25,7 +25,7 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
       <section className={styles.latestEpisodes}>
         <h2>Últimos lançamentos</h2>
         <ul>
-          {latestEpisodes.map((episode) => {
+          {latestEpisodes.map((episode, index) => {
             return (
               <li key={episode.id}>
                 <Image
@@ -43,7 +43,10 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
                   <span>{episode.publishedAtFormatted}</span>
                   <span>{episode.file.durationFormatted}</span>
                 </div>
-                <button type="button" onClick={() => play(episode)}>
+                <button
+                  type="button"
+                  onClick={() => playMultiple(episodes, index)}
+                >
                   <img src="/play-green.svg" alt="Tocar episódio" />
                 </button>
               </li>
@@ -65,7 +68,7 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
             </tr>
           </thead>
           <tbody>
-            {previousEpisodes.map((episode) => {
+            {previousEpisodes.map((episode, index) => {
               return (
                 <tr key={episode.id}>
                   <td style={{ width: 100 }}>
@@ -86,7 +89,12 @@ export default function Home({ latestEpisodes, previousEpisodes }: Props) {
                   <td style={{ width: 100 }}>{episode.publishedAtFormatted}</td>
                   <td>{episode.file.durationFormatted}</td>
                   <td>
-                    <button type="button" onClick={() => play(episode)}>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        playMultiple(episodes, index + latestEpisodes.length)
+                      }
+                    >
                       <img src="/play-green.svg" alt="Tocar episódio" />
                     </button>
                   </td>
